@@ -33,7 +33,12 @@ rn-dir () {
 
 # Run all react-native unit tets	
 rn-test () {
-	rndir && npm test -- --watchAll
+	rn-dir && npm test -- --watchAll --bail=1 --forceExit --reporters=jest-silent-reporter --silent
+}
+
+# Run all react-native unit tets with verbose output
+rn-test-v () {
+	rn-dir && npm test -- --watchAll --bail=1 --forceExit 
 }
 
 # Kill the audio process
@@ -43,7 +48,7 @@ killaudio () {
 
 # Prepare a merge request message
 rn-mr () {
-	rndir
+	rn-dir
 	commit_message=$(git log -1 --pretty=%B)
 	commit_message="${commit_message} :pr:"
 
@@ -78,14 +83,24 @@ browser () {
 	open /Applications/Google\ Chrome.app/ $@
 }
 
+# Print the hash of the current commit
 commithash () {
 	git rev-parse HEAD
 }
 
-rn-prod () { 
-	sed -i -e "s/${RN_UAT_DEPLOYMENT_CONFIG}/${RN_PROD_DEPLOYMENT_CONFIG}/g" $RN_APP_CONFIG 
+rn-dev () {
+	osascript -e 'tell app "Simulator" to activate'
+	osascript -e 'tell application "System Events" to keystroke "z" using {control down, command down}'
 }
 
-rn-uat () { 
-	sed -i -e "s/${RN_PROD_DEPLOYMENT_CONFIG}/${RN_UAT_DEPLOYMENT_CONFIG}/g" $RN_APP_CONFIG
+rn-rebuild () {
+	rn-dir && npm i && cd ios && pod install && rn-dir && notify
+}
+
+xc-clear () {
+	rm -rf ~/Library/Developer/Xcode/DerivedData
+}
+
+c () {
+	clear
 }
