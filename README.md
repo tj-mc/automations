@@ -1,2 +1,2 @@
-# zshrc
-~/.zshrc - Personal automations and shortcuts
+# ~/.automations 
+## zsh automations, shortcuts and scripts I use.
