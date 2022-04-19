@@ -1,106 +1,91 @@
-# Record a video of the currently booted iOS simulator
-rec () {
-	xcrun simctl io booted recordVideo -f --codec=h264  ~/Desktop/$1.mp4
-	ffmpeg -i ~/Desktop/$1.mp4 -profile:v baseline ~/Desktop/$1-comp.mp4
-	open ~/Desktop
-}
+Last login: Tue Apr 19 09:24:43 on ttys003
+thomas.mcintosh@K7M593CC60 ~ % vim ~/.automations
 
-# Compress a video
-comp () {
-	ffmpeg -i $1 -profile:v baseline ~/Desktop/compress.mp4 
-}
 
-# Boot an iOS simulator
-ios () {
-	xcrun simctl boot A02E834D-110D-4260-9113-5BE82E8DEDCB && open -a Simulator
-}
 
-# Boot an android simulator
-android () {
-	~/Library/Android/sdk/emulator/emulator @nexus -gpu on -no-boot-anim -no-snapshot-load
-}
 
-# Notify user that task has been completed
-notify () { 
-	osascript -e 'tell application "Terminal" to display notification "Task Complete" with title "Task Complete"' 
-	say "Task Complete"
-}
 
-# Change to the react-native directory
-rn-dir () {
-	cd $RN_DIRECTORY 
-}
 
-# Run all react-native unit tets	
-rn-test () {
-	rn-dir && npm test -- --watchAll --bail=1 --forceExit --reporters=jest-silent-reporter --silent
-}
 
-# Run all react-native unit tets with verbose output
-rn-test-v () {
-	rn-dir && npm test -- --watchAll --bail=1 --forceExit 
-}
 
-# Kill the audio process
-killaudio () {
-	sudo pkill coreaudiod
-}
 
-# Prepare a merge request message
-rn-mr () {
-	rn-dir
-	commit_message=$(git log -1 --pretty=%B)
-	commit_message="${commit_message} :pr:"
 
-	echo MR Link:
-	read mr_link
-	commit_message="${commit_message}\n${mr_link}"
 
-	echo $commit_message | pbcopy
 
-	echo Wrote message to clipboard.
 
-	slack
+
+
+
+
+
+
+
+
+
+
+        slack
 }
 
 # Open Slack
 slack () {
-	open /Applications/Slack.app
-}
-
-# Cafe ambience
-cafe () {
-	browser "https://www.youtube.com/watch?v=c0_ejQQcrwI"
+        open -a Slack
 }
 
 # Google something
-google () { 
-	browser "https://www.google.com/search?q=$1"
+google () {
+        browser "https://www.google.com/search?q=$1"
 }
 
 # Open broswer
 browser () {
-	open /Applications/Google\ Chrome.app/ $@
+        open -a 'Google Chrome'
 }
 
 # Print the hash of the current commit
-commithash () {
-	git rev-parse HEAD
+commit-hash () {
+        git rev-parse HEAD
 }
 
+# Open the RN developer menu on an iOS simulator
 rn-dev () {
-	osascript -e 'tell app "Simulator" to activate'
-	osascript -e 'tell application "System Events" to keystroke "z" using {control down, command down}'
+
+        if [[ $1 == '-a' ]]; then
+                adb shell input keyevent 82
+        else
+                osascript -e 'tell app "Simulator" to activate'
+                osascript -e 'tell application "System Events" to keystroke "z" using {control down, command down}'
+        fi;
+
 }
 
-rn-rebuild () {
-	rn-dir && npm i && cd ios && pod install && rn-dir && notify
-}
-
-xc-clear () {
-	rm -rf ~/Library/Developer/Xcode/DerivedData
+# Clear Xcode build data
+xcode-clear () {
+        rm -rf ~/Library/Developer/Xcode/DerivedData
 }
 
 c () {
-	clear
+        clear
 }
+
+l () {
+        ls
+}
+
+ll () {
+        ls -la
+}
+
+trash () {
+        if [[ $1 == '--empty' ]]; then
+                rm -rf ~/.quick-delete-cache
+                echo 'Cleared'
+        else
+                mv $1 ~/.quick-delete-cache/$1
+        fi;
+}
+
+metro-clear () {
+        watchman watch-del-all
+        rm -rf /tmp/metro-*
+}
+-- INSERT --
