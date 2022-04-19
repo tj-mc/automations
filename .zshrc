@@ -1,3 +1,4 @@
+# Install dependencies
 setup-automations () {
 	if [[ $(command -v brew) == "" ]]; then
     		echo "Homebrew not installed"
@@ -6,6 +7,7 @@ setup-automations () {
 	fi	
 }
 
+# Open desktop in finder
 desk () {
 	open ~/Desktop
 }
@@ -113,60 +115,33 @@ xcode-clear () {
 	rm -rf ~/Library/Developer/Xcode/DerivedData
 }
 
+# Clear terminal
 c () {
 	clear
 }
 
+# List files
 l () {
 	ls
 }
 
+# List files with details
 ll () {
 	ls -la
 }
 
-rq () {
-	if [[ $1 == '--clean' ]]; then
+# Instantly 'bin' large folders and files
+trash () {
+	if [[ $1 == '--empty' ]]; then
 		rm -rf ~/.quick-delete-cache
-		echo 'Cleared'
+		echo 'Trash emptied'
 	else
 		mv $1 ~/.quick-delete-cache/$1
 	fi;
 }
 
+# Clear metro cache
 metro-clear () {
 	watchman watch-del-all
 	rm -rf /tmp/metro-*
-}
-
-ios-kill () {
-	if [[ $1 == 'lads' ]]; then
-		xcrun simctl terminate $DEFAULT_IOS_SIM_ID $ENTAIN_LADS_IOS_APP_ID
-	elif [[ $1 == 'neds' ]] then	
-		xcrun simctl terminate $DEFAULT_IOS_SIM_ID $ENTAIN_NEDS_IOS_APP_ID
-	else 
-		echo 'Run with "lads" or "neds"'
-	fi;
-}
-
-ios-launch () {
-	if [[ $1 == 'lads' ]]; then
-		xcrun simctl launch $DEFAULT_IOS_SIM_ID $ENTAIN_LADS_IOS_APP_ID
-	elif [[ $1 == 'neds' ]] then	
-		xcrun simctl launch $DEFAULT_IOS_SIM_ID $ENTAIN_NEDS_IOS_APP_ID
-	else 
-		echo 'Run with "lads" or "neds"'
-	fi;
-}
-
-ios-relaunch () {
-	if [[ $1 == 'lads' ]]; then
-		ios-kill lads
-		ios-launch lads
-	elif [[ $1 == 'neds' ]] then	
-		ios-kill neds 
-		ios-launch neds 
-	else 
-		echo 'Run with "lads" or "neds"'
-	fi;
 }
