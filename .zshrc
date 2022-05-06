@@ -25,62 +25,15 @@ comp () {
 	ffmpeg -i $1 -profile:v baseline ~/Desktop/$fileName.mp4 && desk
 }
 
-# Boot an iOS simulator
-ios () {
-	xcrun simctl boot $DEFAULT_IOS_SIM_ID && open -a Simulator
-}
-
-# Boot an android simulator
-android () {
-	~/Library/Android/sdk/emulator/emulator @$DEFAULT_ANDROID_SIM_ID -gpu on -no-boot-anim -no-snapshot-load
-}
-
 # Notify user that task has been completed
 notify () { 
 	osascript -e 'tell application "Terminal" to display notification "Task Complete" with title "Task Complete"' 
 	afplay /System/Library/Sounds/Purr.aiff
 }
 
-# Change to the react-native directory
-rn () {
-	cd $RN_DIRECTORY 
-}
-
-# Run all react-native unit tets	
-rn-test-silent () {
-	rn && npm test -- --watchAll --bail=1 --forceExit --reporters=jest-silent-reporter --silent
-}
-
-# Run all react-native unit tets with verbose output
-rn-test () {
-	rn && npm test -- --watchAll --bail=1 --forceExit --maxWorkers=100% $1
-}
-
 # Kill the audio process
 killaudio () {
 	sudo pkill coreaudiod
-}
-
-# Prepare a merge request message
-rn-mr () {
-	rn
-	commit_message=$(git log -1 --pretty=%B)
-	commit_message="${commit_message} :pr:"
-
-	echo MR Link:
-	read mr_link
-	commit_message="${commit_message}\n${mr_link}"
-
-	echo $commit_message | pbcopy
-
-	echo Wrote message to clipboard.
-
-	slack
-}
-
-# Open Slack
-slack () {
-	open -a Slack
 }
 
 # Google something
@@ -128,16 +81,6 @@ l () {
 # List files with details
 ll () {
 	ls -la
-}
-
-# Instantly 'bin' large folders and files
-trash () {
-	if [[ $1 == '--empty' ]]; then
-		rm -rf ~/.quick-delete-cache
-		echo 'Trash emptied'
-	else
-		mv $1 ~/.quick-delete-cache/$1
-	fi;
 }
 
 # Clear metro cache
